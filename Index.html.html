@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FinAman – Asisten Keuangan AI untuk DANA (Konsep)</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--tx:#14213d;--mut:#5b6b85;--pri:#118eea;--pri2:#0b5fb0;--bd:#dde5f0;--ok:#12a150;--warn:#e69b00;--bad:#d93a3a;--soft:#e8f3fd;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0e1522;--card:#17212f;--tx:#e8eef8;--mut:#9aa9c2;--bd:#27354b;--soft:#14304a;--pri:#3aa6f5}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0e1522;--card:#17212f;--tx:#e8eef8;--mut:#9aa9c2;--bd:#27354b;--soft:#14304a;--pri:#3aa6f5}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55}
+header{background:linear-gradient(135deg,#0b5fb0,#118eea);color:#fff;padding:18px 16px 14px}
+.wrap{max-width:900px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.brand h1{margin:0;font-size:1.5rem}.brand small{opacity:.9;display:block;font-size:.8rem}
+.badge{background:rgba(255,255,255,.2);padding:3px 10px;border-radius:99px;font-size:.72rem}
+.theme{background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
+nav{display:flex;gap:6px;overflow-x:auto;padding:10px 12px;background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
+nav button{flex:0 0 auto;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 14px;border-radius:99px;cursor:pointer;font-size:.88rem}
+nav button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+main{max-width:900px;margin:0 auto;padding:16px 14px 40px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
+h2{margin:0 0 4px;font-size:1.25rem}h3{margin:0 0 8px;font-size:1.02rem}
+p.d{color:var(--mut);margin:0 0 12px;font-size:.92rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.tile{cursor:pointer;transition:.15s}.tile:hover{border-color:var(--pri);transform:translateY(-2px)}
+.tile .ic{font-size:1.6rem}
+label{display:block;font-weight:600;font-size:.85rem;margin:10px 0 4px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+textarea{min-height:110px;resize:vertical}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:10px;padding:10px 16px;cursor:pointer;font:inherit;font-weight:600;margin:10px 6px 0 0}
+.btn.alt{background:var(--soft);color:var(--pri2)}
+@media (prefers-color-scheme:dark){.btn.alt{color:var(--pri)}}
+.res{margin-top:14px;border-radius:12px;padding:14px;border:1px solid var(--bd);background:var(--bg)}
+.res.low{border-color:var(--ok)}.res.mid{border-color:var(--warn)}.res.high{border-color:var(--bad)}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;color:#fff;font-weight:700;font-size:.8rem}
+.low .tag{background:var(--ok)}.mid .tag{background:var(--warn)}.high .tag{background:var(--bad)}
+.meter{height:10px;background:var(--bd);border-radius:9px;overflow:hidden;margin:8px 0}
+.meter i{display:block;height:100%;background:var(--ok);transition:width .4s}
+.note{font-size:.8rem;color:var(--mut);border-left:3px solid var(--warn);padding-left:10px;margin-top:10px}
+ul{padding-left:20px;margin:6px 0}
+.steps{list-style:none;padding:0;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:8px 0 8px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:6px;width:30px;height:30px;border-radius:50%;background:var(--pri);color:#fff;display:grid;place-items:center;font-weight:700}
+.tl{display:flex;gap:4px;margin:12px 0;flex-wrap:wrap}
+.tl div{flex:1;min-width:90px;text-align:center;font-size:.78rem;padding:8px 4px;border-radius:8px;background:var(--bd);color:var(--mut)}
+.tl div.done{background:var(--ok);color:#fff}.tl div.cur{background:var(--pri);color:#fff}
+.bar{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:.85rem}
+.bar span.n{width:90px;flex:none}.bar .t{flex:1;height:14px;background:var(--bd);border-radius:8px;overflow:hidden}
+.bar .t i{display:block;height:100%;background:var(--pri)}.bar .t i.over{background:var(--bad)}
+.bar span.v{width:92px;text-align:right;flex:none}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.two{grid-template-columns:1fr}}
+.pro li::marker{color:var(--ok)}.con li::marker{color:var(--warn)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:#14213d;color:#fff;padding:12px 18px;border-radius:12px;max-width:90%;display:none;z-index:20;font-size:.9rem}
+footer{text-align:center;color:var(--mut);font-size:.78rem;padding:0 14px 24px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="brand">
+<div><h1>🛡️ FinAman</h1><small>Asisten keuangan berbasis AI untuk pengguna DANA</small></div>
+<div><span class="badge">Prototipe Konsep</span> <button class="theme" id="themeBtn" aria-label="Ganti tema">🌓</button></div>
+</div></div></header>
+
+<nav id="nav">
+<button data-t="home" class="on">Beranda</button>
+<button data-t="fraud">AI Fraud Detector</button>
+<button data-t="trx">AI Transaction Assistant</button>
+<button data-t="comp">AI Complaint Tracker</button>
+<button data-t="budget">AI Smart Budgeting</button>
+<button data-t="how">Cara Kerja &amp; Contoh</button>
+<button data-t="pros">Kelebihan &amp; Tantangan</button>
+</nav>
+
+<main>
+<section id="home" class="on">
+<div class="card"><h2>Selamat datang di FinAman</h2>
+<p class="d">FinAman adalah konsep inovasi (bukan fitur resmi DANA) yang menggabungkan analisis risiko transaksi, bantuan penyelesaian kendala, dan pengelolaan anggaran dalam satu layanan. Nama FinAman berasal dari “finansial” dan “aman”.</p>
+<div class="grid">
+<div class="card tile" data-go="fraud"><div class="ic">🕵️</div><h3>AI Fraud Detector</h3><p class="d">Periksa pesan/tautan/permintaan transfer yang mencurigakan.</p></div>
+<div class="card tile" data-go="trx"><div class="ic">💬</div><h3>AI Transaction Assistant</h3><p class="d">Pahami transaksi gagal atau tertunda dan langkah berikutnya.</p></div>
+<div class="card tile" data-go="comp"><div class="ic">📋</div><h3>AI Complaint Tracker</h3><p class="d">Buat dan pantau tahapan pengaduan.</p></div>
+<div class="card tile" data-go="budget"><div class="ic">📊</div><h3>AI Smart Budgeting</h3><p class="d">Kelompokkan pengeluaran dan atur anggaran sederhana.</p></div>
+</div>
+<div class="note">Analisis AI tidak selalu benar. Untuk kasus rumit, dugaan penipuan, dan pengaduan resmi, penanganan tetap mengikuti prosedur DANA dan petugas layanan pelanggan. Jangan pernah membagikan PIN dan OTP.</div>
+</div>
+</section>
+
+<section id="fraud">
+<div class="card"><h2>🕵️ AI Fraud Detector</h2>
+<p class="d">Tempel pesan, tautan, atau informasi pembayaran yang Anda terima. Sistem mencari indikasi penipuan dan memberi peringatan.</p>
+<label for="fText">Pesan / informasi yang ingin diperiksa</label>
+<textarea id="fText" placeholder="Contoh: Akun DANA Anda akan diblokir. Segera transfer Rp500.000 ke rekening 1234567 dan kirim kode OTP ke admin..."></textarea>
+<button class="btn" id="fRun">Periksa Risiko</button>
+<button class="btn alt" id="fEx">Isi Contoh</button>
+<div id="fRes"></div></div>
+</section>
+
+<section id="trx">
+<div class="card"><h2>💬 AI Transaction Assistant</h2>
+<p class="d">Jelaskan kendala transaksi Anda. AI memberi panduan berdasarkan status dan prosedur resmi, serta tidak menyatakan berhasil/gagal tanpa bukti.</p>
+<label for="tType">Jenis kendala</label>
+<select id="tType">
+<option value="gagal">Transaksi gagal, saldo terpotong</option>
+<option value="tunda">Transaksi tertunda / pending</option>
+<option value="transfer">Transfer belum diterima penerima</option>
+<option value="topup">Top up belum masuk</option>
+</select>
+<label for="tId">Nomor referensi / ID transaksi</label>
+<input id="tId" placeholder="Contoh: 2026110112345678">
+<label for="tStat">Status yang tampil di riwayat transaksi</label>
+<select id="tStat"><option value="">Belum saya cek</option><option value="berhasil">Berhasil</option><option value="proses">Diproses</option><option value="gagal">Gagal</option></select>
+<button class="btn" id="tRun">Bantu Saya</button>
+<div id="tRes"></div></div>
+</section>
+
+<section id="comp">
+<div class="card"><h2>📋 AI Complaint Tracker</h2>
+<p class="d">Buat laporan lalu pantau tahapannya. Status hanya dapat ditampilkan jika tersedia di sistem pengaduan resmi (di prototipe ini disimulasikan).</p>
+<label for="cType">Jenis laporan</label>
+<select id="cType"><option>Dugaan penipuan</option><option>Transaksi gagal, saldo terpotong</option><option>Transfer salah tujuan</option><option>Akses akun tidak dikenal</option></select>
+<label for="cDesc">Ringkasan kejadian</label>
+<textarea id="cDesc" placeholder="Ceritakan singkat kronologi kejadian..."></textarea>
+<button class="btn" id="cAdd">Kirim Laporan</button></div>
+<div id="cList"></div>
+</section>
+
+<section id="budget">
+<div class="card"><h2>📊 AI Smart Budgeting</h2>
+<p class="d">Data transaksi hanya dianalisis jika Anda memberi izin. Data di bawah adalah contoh simulasi.</p>
+<label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="consent" style="width:auto"> Saya mengizinkan FinAman menganalisis data transaksi saya</label>
+<div id="bBox" style="display:none">
+<label for="bInc">Penghasilan / uang saku bulanan (Rp)</label>
+<input id="bInc" type="number" value="2500000" min="0">
+<div class="two">
+<div><label for="bName">Tambah transaksi: keterangan</label><input id="bName" placeholder="mis. Makan siang warteg"></div>
+<div><label for="bAmt">Nominal (Rp)</label><input id="bAmt" type="number" min="0" placeholder="25000"></div>
+</div>
+<button class="btn" id="bAdd">Tambah &amp; Kategorikan</button>
+<div id="bRes"></div>
+</div></div>
+</section>
+
+<section id="how">
+<div class="card"><h2>⚙️ Cara Kerja FinAman</h2>
+<ol class="steps">
+<li><b>Pengguna membuka fitur FinAman</b> dan memilih layanan: pemeriksaan risiko, bantuan transaksi, pengaduan, atau anggaran.</li>
+<li><b>Sistem memproses informasi</b> yang relevan sesuai izin pengguna dan akses sistem yang tersedia.</li>
+<li><b>AI memberikan hasil analisis</b> berupa peringatan, penjelasan, atau rekomendasi.</li>
+<li><b>Pengguna mengambil tindakan:</b> mengikuti saran, memeriksa lebih lanjut, atau menghubungi petugas.</li>
+<li><b>Sistem melakukan tindak lanjut.</b> Kasus resmi tetap mengikuti prosedur DANA dan tidak sepenuhnya diserahkan kepada AI.</li>
+</ol></div>
+<div class="card"><h3>Contoh Penggunaan (coba langsung)</h3>
+<p class="d"><b>Contoh 1:</b> pengguna menerima pesan yang mengatasnamakan dompet digital dan meminta transfer ke rekening tertentu, lalu memeriksanya lewat AI Fraud Detector.</p>
+<button class="btn" id="ex1">Jalankan Contoh 1</button>
+<p class="d" style="margin-top:14px"><b>Contoh 2:</b> pengguna ingin mengetahui kebiasaan pengeluaran selama satu bulan lewat AI Smart Budgeting.</p>
+<button class="btn" id="ex2">Jalankan Contoh 2</button></div>
+</section>
+
+<section id="pros">
+<div class="two">
+<div class="card pro"><h2>✅ Kelebihan</h2><ul>
+<li>Membantu pengguna mengenali indikasi risiko penipuan.</li>
+<li>Mempermudah pemahaman terhadap kendala transaksi.</li>
+<li>Membantu mengatur pengeluaran dengan lebih terencana.</li>
+<li>Memberikan bantuan awal secara lebih cepat dan personal.</li>
+<li>Mendorong pemahaman masyarakat terhadap keamanan keuangan digital.</li></ul></div>
+<div class="card con"><h2>⚠️ Tantangan</h2><ul>
+<li><b>Keamanan data pribadi:</b> data dibatasi sesuai kebutuhan, dilindungi, dan berbasis izin.</li>
+<li><b>Ketepatan hasil AI:</b> bisa salah menilai transaksi aman atau gagal mendeteksi penipuan tertentu.</li>
+<li><b>Integrasi sistem:</b> perlu terhubung ke sistem transaksi &amp; pengaduan resmi.</li>
+<li><b>Kepercayaan pengguna:</b> AI hanya membantu, bukan pengganti keputusan resmi.</li>
+<li><b>Pengawasan manusia:</b> kasus rumit tetap ditangani petugas.</li></ul></div>
+</div>
+<div class="card"><h3>Penerapan dalam aplikasi ini</h3>
+<ul><li>Setiap hasil AI disertai penafian akurasi (ketepatan &amp; kepercayaan).</li>
+<li>Budgeting hanya aktif setelah persetujuan pengguna (keamanan data).</li>
+<li>Tombol “Hubungi Petugas” tersedia di fitur-fitur (pengawasan manusia).</li>
+<li>Status transaksi/laporan tidak diklaim tanpa bukti (transparansi &amp; integrasi).</li></ul>
+<button class="btn" id="human">👩‍💼 Hubungi Petugas</button></div>
+</section>
+</main>
+<footer>FinAman adalah usulan konsep inovasi untuk makalah Financial Technology, bukan fitur resmi DANA. Data dan proses pada prototipe ini bersifat simulasi.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+const rp=n=>"Rp"+Math.round(n).toLocaleString("id-ID");
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function toast(m){const t=$("#toast");t.textContent=m;t.style.display="block";clearTimeout(t._h);t._h=setTimeout(()=>t.style.display="none",3500)}
+function go(id){$$("section").forEach(s=>s.classList.toggle("on",s.id===id));$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===id));scrollTo({top:0,behavior:"smooth"})}
+$$("#nav button").forEach(b=>b.onclick=()=>go(b.dataset.t));
+$$("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+$("#themeBtn").onclick=()=>{const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
+const humanMsg='Permintaan diteruskan ke petugas layanan pelanggan DANA (simulasi). Untuk kasus nyata, gunakan Pusat Bantuan resmi di aplikasi DANA.';
+$("#human").onclick=()=>toast(humanMsg);
+const humanBtn='<button class="btn alt" onclick="toast(humanMsg)">👩‍💼 Hubungi Petugas</button>';
+
+const RULES=[
+ {re:/\b(otp|kode verifikasi|kode rahasia)\b/i,w:30,t:"Meminta kode OTP/verifikasi (tidak boleh dibagikan kepada siapa pun)."},
+ {re:/\bpin\b/i,w:30,t:"Menyebut atau meminta PIN."},
+ {re:/(transfer|kirim(kan)?|setor)\b.*(rekening|no\.? ?rek|\d{6,})/i,w:20,t:"Meminta transfer ke rekening/nomor tertentu."},
+ {re:/(segera|buruan|sekarang juga|dalam \d+ (jam|menit)|terakhir|darurat)/i,w:15,t:"Menekan dengan urgensi waktu."},
+ {re:/(diblokir|dibekukan|ditutup|suspend|limit akun)/i,w:15,t:"Mengancam akun akan diblokir."},
+ {re:/(hadiah|undian|menang|bonus|cashback besar|gratis)/i,w:15,t:"Menjanjikan hadiah atau keuntungan tidak wajar."},
+ {re:/(bit\.ly|tinyurl|s\.id|t\.co|cutt\.ly|https?:\/\/(?![^\s]*dana\.id))/i,w:20,t:"Memuat tautan yang tidak berasal dari domain resmi dana.id."},
+ {re:/(\.apk\b|install aplikasi|unduh aplikasi)/i,w:25,t:"Meminta memasang file/aplikasi di luar toko resmi."},
+ {re:/(admin|cs|petugas|customer service).*(whatsapp|wa|telegram)|(whatsapp|wa|telegram).*(admin|cs)/i,w:15,t:"Mengatasnamakan petugas lewat WhatsApp/Telegram pribadi."}
+];
+function fraudCheck(txt){
+ const hits=RULES.filter(r=>r.re.test(txt));
+ const score=Math.min(100,hits.reduce((a,r)=>a+r.w,0));
+ const lvl=score>=55?"high":score>=25?"mid":"low";
+ const label={high:"RISIKO TINGGI",mid:"WASPADA",low:"RISIKO RENDAH"}[lvl];
+ const advice={high:"Jangan transfer, jangan klik tautan, dan jangan bagikan PIN/OTP. Periksa lewat kanal resmi DANA dan laporkan melalui Pusat Bantuan.",
+ mid:"Ada beberapa indikasi mencurigakan. Periksa kembali identitas penerima dan kebenaran informasi lewat kanal resmi sebelum melanjutkan.",
+ low:"Tidak ditemukan indikasi kuat, tetapi tetap berhati-hati. Hasil ini bukan jaminan bahwa pesan tersebut aman."}[lvl];
+ return{hits,score,lvl,label,advice};
+}
+$("#fEx").onclick=()=>{$("#fText").value="Pemberitahuan DANA: akun Anda akan diblokir dalam 1 jam. Segera transfer Rp500.000 ke rekening 1234567890 dan kirim kode OTP ke admin lewat WhatsApp. Klik http://bit.ly/verif-dana"};
+$("#fRun").onclick=()=>{
+ const v=$("#fText").value.trim(); if(!v){toast("Masukkan pesan yang ingin diperiksa.");return}
+ const r=fraudCheck(v);
+ $("#fRes").innerHTML=`<div class="res ${r.lvl}"><span class="tag">${r.label}</span> <b>Skor risiko: ${r.score}/100</b>
+ <div class="meter"><i style="width:${r.score}%;background:${r.lvl==="high"?"var(--bad)":r.lvl==="mid"?"var(--warn)":"var(--ok)"}"></i></div>
+ ${r.hits.length?"<b>Indikasi ditemukan:</b><ul>"+r.hits.map(h=>`<li>${h.t}</li>`).join("")+"</ul>":"<p>Tidak ada pola penipuan umum yang terdeteksi.</p>"}
+ <p><b>Saran:</b> ${r.advice}</p>${humanBtn}
+ <div class="note">AI dapat salah menilai pesan aman sebagai berisiko atau sebaliknya, dan tidak dapat menjamin semua penipuan terdeteksi.</div></div>`;
+};
+
+const GUIDE={
+ gagal:["Transaksi gagal namun saldo terpotong biasanya dikembalikan otomatis oleh sistem sesuai ketentuan layanan.",["Cek riwayat transaksi dan saldo terbaru.","Simpan bukti (tangkapan layar, nomor referensi).","Jika dana belum kembali melewati batas waktu pada Pusat Bantuan, ajukan pengaduan."]],
+ tunda:["Transaksi tertunda berarti masih menunggu konfirmasi dari pihak terkait (misalnya penyedia layanan atau bank).",["Tunggu beberapa saat dan hindari mengulang transaksi yang sama.","Pantau perubahan status di riwayat transaksi.","Jika status tidak berubah, hubungi layanan bantuan dengan nomor referensi."]],
+ transfer:["Transfer yang belum diterima dapat disebabkan oleh keterlambatan sistem bank tujuan atau kesalahan data penerima.",["Pastikan nomor/rekening tujuan sudah benar.","Minta penerima memeriksa saldo dan riwayat mutasinya.","Jika status Berhasil tetapi dana belum masuk, ajukan pengaduan dengan bukti transfer."]],
+ topup:["Top up yang belum masuk dapat tertunda oleh proses dari kanal pembayaran.",["Periksa bukti pembayaran dari kanal top up.","Tunggu sesuai estimasi proses kanal tersebut.","Jika saldo belum bertambah, laporkan beserta bukti pembayaran."]]
+};
+$("#tRun").onclick=()=>{
+ const g=GUIDE[$("#tType").value], id=$("#tId").value.trim(), st=$("#tStat").value;
+ let verdict;
+ if(!id||!st) verdict='<span class="tag" style="background:var(--warn)">BUKTI BELUM CUKUP</span> AI belum dapat menyatakan transaksi berhasil atau gagal karena nomor referensi dan status transaksi belum lengkap.';
+ else if(st==="berhasil") verdict=`<span class="tag" style="background:var(--ok)">BERDASARKAN STATUS: BERHASIL</span> Riwayat yang Anda laporkan untuk ${esc(id)} berstatus berhasil. Jika dana tetap belum diterima, kemungkinan ada keterlambatan di pihak penerima.`;
+ else if(st==="proses") verdict=`<span class="tag" style="background:var(--warn)">BERDASARKAN STATUS: DIPROSES</span> Transaksi ${esc(id)} masih diproses. Mohon tunggu dan jangan mengulang transaksi.`;
+ else verdict=`<span class="tag" style="background:var(--bad)">BERDASARKAN STATUS: GAGAL</span> Transaksi ${esc(id)} tercatat gagal. Pastikan dana kembali ke saldo; jika belum, ajukan pengaduan.`;
+ $("#tRes").innerHTML=`<div class="res mid"><p>${verdict}</p><p>${g[0]}</p><b>Langkah berikutnya:</b><ol>${g[1].map(s=>`<li>${s}</li>`).join("")}</ol>
+ <button class="btn" onclick="prefill()">Ajukan Pengaduan</button>${humanBtn}
+ <div class="note">Penjelasan didasarkan pada informasi umum dan status yang Anda masukkan, bukan data resmi sistem transaksi.</div></div>`;
+};
+function prefill(){const s=$("#tType");$("#cType").selectedIndex=s.value==="transfer"?2:1;$("#cDesc").value=`${s.options[s.selectedIndex].text}. Ref: ${$("#tId").value||"-"}`;go("comp")}
+
+const STAGES=["Diterima","Verifikasi Data","Investigasi","Selesai"];
+const reports=[];
+function renderComplaints(){
+ $("#cList").innerHTML=reports.map((r,i)=>`<div class="card"><h3>${r.id} · ${esc(r.type)}</h3><p class="d">${esc(r.desc)} <br><small>Dibuat: ${r.date}</small></p>
+ <div class="tl">${STAGES.map((s,k)=>`<div class="${k<r.stage?"done":k===r.stage?"cur":""}">${k<r.stage?"✓ ":""}${s}</div>`).join("")}</div>
+ <p><b>Dokumen yang diperlukan:</b> bukti transaksi/tangkapan layar, nomor referensi, dan identitas akun.</p>
+ ${r.stage<3?`<button class="btn alt" onclick="advance(${i})">Simulasikan Pembaruan Status</button>`:"<p><b>Laporan selesai diproses.</b></p>"}${humanBtn}
+ <div class="note">Pada sistem nyata, status hanya ditampilkan bila terhubung dengan layanan pengaduan resmi. Tombol simulasi hanya untuk demonstrasi.</div></div>`).join("");
+}
+function advance(i){if(reports[i].stage<3)reports[i].stage++;renderComplaints()}
+$("#cAdd").onclick=()=>{
+ const d=$("#cDesc").value.trim(); if(d.length<10){toast("Tulis ringkasan kejadian minimal 10 karakter.");return}
+ reports.unshift({id:"LP-"+Math.floor(100000+Math.random()*900000),type:$("#cType").value,desc:d,stage:0,date:new Date().toLocaleString("id-ID")});
+ $("#cDesc").value="";renderComplaints();toast("Laporan dibuat. Pantau tahapannya di bawah.");
+};
+
+const CATS={Makanan:/(makan|minum|kopi|warteg|nasi|bakso|cafe|resto|jajan|snack)/i,Transportasi:/(ojek|grab|gojek|bensin|parkir|bus|kereta|tol|angkot)/i,Belanja:/(belanja|toko|baju|market|shopee|tokopedia|sepatu)/i,Tagihan:/(listrik|pulsa|internet|wifi|air|kos|sewa|bpjs)/i,Hiburan:/(film|bioskop|game|netflix|spotify|nonton)/i,Lainnya:/.*/};
+const prev={Makanan:520000,Transportasi:250000,Belanja:300000,Tagihan:450000,Hiburan:120000,Lainnya:80000};
+const trx=[["Makan siang warteg",25000],["Kopi cafe",38000],["Ojek online",18000],["Bensin motor",60000],["Listrik token",200000],["Belanja baju di toko",250000],["Nasi goreng malam",30000],["Langganan Netflix",54000],["Makan bakso",22000],["Jajan snack",45000],["Kopi dan roti",60000],["Parkir kampus",20000]].map(([n,a])=>({n,a}));
+const cat=n=>Object.keys(CATS).find(k=>CATS[k].test(n));
+$("#consent").onchange=e=>{$("#bBox").style.display=e.target.checked?"block":"none";if(e.target.checked)renderBudget()};
+$("#bInc").oninput=renderBudget;
+$("#bAdd").onclick=()=>{const n=$("#bName").value.trim(),a=+$("#bAmt").value;if(!n||a<=0){toast("Isi keterangan dan nominal transaksi.");return}trx.push({n,a});$("#bName").value=$("#bAmt").value="";renderBudget()};
+function renderBudget(){
+ const inc=+$("#bInc").value||0, tot={};Object.keys(CATS).forEach(k=>tot[k]=0);trx.forEach(t=>tot[cat(t.n)]+=t.a);
+ const sum=Object.values(tot).reduce((a,b)=>a+b,0);
+ // anggaran sederhana: 50% kebutuhan(makan+transport+tagihan) 30% keinginan 20% tabungan dari penghasilan
+ const lim={Makanan:inc*.2,Transportasi:inc*.1,Tagihan:inc*.2,Belanja:inc*.15,Hiburan:inc*.1,Lainnya:inc*.05};
+ const max=Math.max(...Object.keys(tot).map(k=>Math.max(tot[k],lim[k])),1);
+ const tips=[];
+ Object.keys(tot).forEach(k=>{const d=prev[k]?((tot[k]-prev[k])/prev[k]*100):0;
+  if(tot[k]>lim[k])tips.push(`Pengeluaran <b>${k}</b> (${rp(tot[k])}) melebihi batas yang disarankan ${rp(lim[k])}.`);
+  if(Math.abs(d)>=20&&tot[k])tips.push(`<b>${k}</b> ${d>0?"naik":"turun"} ${Math.abs(d).toFixed(0)}% dibanding bulan lalu (${rp(prev[k])}).`)});
+ const sisa=inc-sum;
+ $("#bRes").innerHTML=`<div class="res"><h3>Ringkasan Bulan Ini</h3>
+ <p>Total pengeluaran: <b>${rp(sum)}</b> · Sisa: <b style="color:${sisa<0?"var(--bad)":"var(--ok)"}">${rp(sisa)}</b></p>
+ ${Object.keys(tot).map(k=>`<div class="bar"><span class="n">${k}</span><span class="t"><i class="${tot[k]>lim[k]?"over":""}" style="width:${tot[k]/max*100}%"></i></span><span class="v">${rp(tot[k])}</span></div>`).join("")}
+ <h3 style="margin-top:12px">Rekomendasi</h3><ul>${tips.length?tips.map(t=>`<li>${t}</li>`).join(""):"<li>Pengeluaran Anda masih dalam batas yang disarankan.</li>"}</ul>
+ <p class="d">Batas saran = persentase sederhana dari penghasilan (Makanan 20%, Tagihan 20%, Belanja 15%, Transportasi 10%, Hiburan 10%, Lainnya 5%); sisanya untuk tabungan.</p>
+ <h3>Daftar Transaksi (dikategorikan otomatis)</h3><ul>${trx.slice().reverse().map(t=>`<li>${esc(t.n)} – ${rp(t.a)} <small>[${cat(t.n)}]</small></li>`).join("")}</ul>
+ <div class="note">Kategori dan saran dihasilkan otomatis dan dapat keliru. Keputusan keuangan tetap ada pada Anda.</div></div>`;
+}
+
+$("#ex1").onclick=()=>{go("fraud");$("#fEx").click();$("#fRun").click()};
+$("#ex2").onclick=()=>{go("budget");const c=$("#consent");c.checked=true;c.dispatchEvent(new Event("change"))};
+</script>
+</body>
+</html>
